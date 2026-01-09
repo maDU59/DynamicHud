@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.example.DynamicHudClient;
@@ -38,12 +39,20 @@ public class CrosshairVisibilityMixin {
 
 	@Inject(at = @At("HEAD"), method = "renderItemHotbar", cancellable = true)
 	private void renderItemHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo info) {
-		if(false){
+		if(DynamicHudClient.hotbarVisibility > 0.0f){
 			return;
 		}
 		else{
 			info.cancel();
 		}
+	}
+
+	@Redirect(
+    method = "renderItemHotbar",
+    at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;guiHeight()I")
+	)
+	private int redirectGuiHeight(GuiGraphics instance) {
+		return instance.guiHeight() + 22 - (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility);
 	}
 
 	@ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 4)

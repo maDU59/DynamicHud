@@ -15,11 +15,11 @@ public interface ContextualBarRendererMixin {
 
     @Inject(method = "top", at = @At("RETURN"), cancellable = true)
     default void modifyTopPosition(CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(info.getReturnValue() + 22 - DynamicHudClient.hotbarHeight);
+        info.setReturnValue(info.getReturnValue() + 22 - (int)(DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility));
     }
 
     @ModifyVariable(method = "renderExperienceLevel", at = @At("STORE"), ordinal = 2)
 	private static int modifyTextPosition(int y) {
-		return y + 22 - DynamicHudClient.hotbarHeight;
+		return y + 22 - (int)(DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility);
 	}
 }
