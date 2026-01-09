@@ -4,6 +4,8 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.phys.HitResult;
@@ -17,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.example.DynamicHudClient;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 
 @Mixin(Gui.class)
 public class CrosshairVisibilityMixin {
@@ -63,6 +66,33 @@ public class CrosshairVisibilityMixin {
 	@ModifyVariable(method = "renderVehicleHealth", at = @At("STORE"), ordinal = 2)
 	private int offsetVehicleHealthY(int y) {
 		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
+	}
+
+	//#region Opacity mixins
+
+	@Redirect(
+		method = "renderItemHotbar",
+		at = @At(value = "INVOKE", 
+				target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
+	)
+	private void redirectHotbarBlit(GuiGraphics instance, RenderPipeline pipeline, Identifier id, int x, int y, int width, int height) {
+		instance.blitSprite(pipeline, id, x, y, width, height, DynamicHudClient.hotbarVisibility);
+	}
+
+	@Redirect(
+		method = "renderHeart",
+		at = @At(value = "INVOKE", 
+				target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
+	)
+	private void redirectHeartBlit(GuiGraphics instance, RenderPipeline pipeline, Identifier id, int x, int y, int width, int height) {
+		instance.blitSprite(pipeline, id, x, y, width, height, DynamicHudClient.healthVisibility);
+	}
+
+	//#endregion
+
+	@ModifyVariable(method = "renderArmor", at = @At("STORE"), ordinal = 5)
+	private static int offsetArmorY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k, int l) {
+		return i - (int)(((j - 1) * k + 10) * DynamicHudClient.healthVisibility);
 	}
 
 	// @ModifyVariable(method = "renderHearts", at = @At("HEAD"), ordinal = 1)

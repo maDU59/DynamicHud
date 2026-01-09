@@ -1,12 +1,12 @@
 package com.example;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
 
 public class DynamicHudClient implements ClientModInitializer {
+
+	private final Minecraft minecraft = Minecraft.getInstance();
 
 	//Hotbar is 22 pixels tall (23 with the selector)
 	//2 pixels between hotbar and xp bar
@@ -24,23 +24,49 @@ public class DynamicHudClient implements ClientModInitializer {
 	public static float hotbarVisibility = 1.0f;
 	public static boolean hotbarState = true;
 	private static long lastHotbarState = System.nanoTime();
+
+	public static float healthVisibility = 1.0f;
+	public static boolean healthState = true;
+	private static long lastHealthState = System.nanoTime();
+
 	private int slot;
 
 	@Override
 	public void onInitializeClient() {
 		HudRenderCallback.EVENT.register((drawContext, delta) -> {
 				UpdateHotbar();
+				UpdateHealth();
 			}
 		);
 	}
 
-	private void UpdateHotbar(){
+	private void UpdateHealth(){
+		if (this.minecraft.player == null) return;
 
-		if (Minecraft.getInstance().player == null) return;
+		if (this.minecraft.player.getHealth() < this.minecraft.player.getMaxHealth()){
+			lastHealthState = System.nanoTime();
+		}
 
 		float time = 3.0f;
 
-		int slot = Minecraft.getInstance().player.getInventory().getSelectedSlot();
+		if (lastHealthState + (time * 1000000000L) > System.nanoTime()){
+			healthState = true;
+		} else {
+			healthState = false;
+		}
+
+		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
+
+		healthVisibility = lerp(healthVisibility, healthState, time * 0.1f, 1/(deltaTicks * 0.05f));
+	}
+
+	private void UpdateHotbar(){
+
+		if (this.minecraft.player == null) return;
+
+		float time = 3.0f;
+
+		int slot = this.minecraft.player.getInventory().getSelectedSlot();
 		if(this.slot != slot){
 			lastHotbarState = System.nanoTime();
 			this.slot = slot;
@@ -52,26 +78,27 @@ public class DynamicHudClient implements ClientModInitializer {
 			hotbarState = false;
 		}
 
-		// This gives you the change in ticks since the last frame
-		float deltaTicks = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
+		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		// To convert ticks to seconds (since 1 tick = 0.05 seconds):
-		float deltaTimeSeconds = 1/(deltaTicks * 0.05f);
+		hotbarVisibility = lerp(hotbarVisibility, hotbarState, time * 0.1f, 1/(deltaTicks * 0.05f));
+	}
 
-		if (hotbarState){
-			if (hotbarVisibility < 1.0f){
-				hotbarVisibility += 1f/(time * 0.1f * deltaTimeSeconds);
+	private float lerp(float value, boolean bool, float duration, float deltaTimeSeconds){
+		if (bool){
+			if (value < 1.0f){
+				value += 1f/(duration * deltaTimeSeconds);
 			}
-			if (hotbarVisibility > 1.0f){
-				hotbarVisibility = 1.0f;
+			if (value > 1.0f){
+				value = 1.0f;
 			}
 		} else {
-			if (hotbarVisibility > 0.0f){
-				hotbarVisibility -= 1f/(time * 0.1f * deltaTimeSeconds);
+			if (value > 0.0f){
+				value -= 1f/(duration * deltaTimeSeconds);
 			}
-			if (hotbarVisibility < 0.0f){
-				hotbarVisibility = 0.0f;
+			if (value < 0.0f){
+				value = 0.0f;
 			}
 		}
+		return value;
 	}
 }
