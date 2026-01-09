@@ -1,8 +1,10 @@
 package com.example;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.ServerInfo;
 
 public class DynamicHudClient implements ClientModInitializer {
 
@@ -38,6 +40,11 @@ public class DynamicHudClient implements ClientModInitializer {
 				UpdateHealth();
 			}
 		);
+
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+			lastHotbarState = System.nanoTime();
+			lastHealthState = System.nanoTime();
+		});
 	}
 
 	private void UpdateHealth(){
