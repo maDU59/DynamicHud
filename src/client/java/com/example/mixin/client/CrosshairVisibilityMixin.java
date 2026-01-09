@@ -38,7 +38,6 @@ public class CrosshairVisibilityMixin {
 
 	@Inject(at = @At("HEAD"), method = "renderItemHotbar", cancellable = true)
 	private void renderItemHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo info) {
-
 		if(false){
 			return;
 		}
@@ -49,12 +48,12 @@ public class CrosshairVisibilityMixin {
 
 	@ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 4)
 	private int offsetPlayerInformationsY(int y) {
-		return y + 39 - (10 + DynamicHudClient.hotbarHeight + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
+		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
 	}
 
 	@ModifyVariable(method = "renderVehicleHealth", at = @At("STORE"), ordinal = 2)
 	private int offsetVehicleHealthY(int y) {
-		return y + 39 - (10 + DynamicHudClient.hotbarHeight + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
+		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
 	}
 
 	// @ModifyVariable(method = "renderHearts", at = @At("HEAD"), ordinal = 1)
