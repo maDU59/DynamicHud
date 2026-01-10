@@ -36,8 +36,13 @@ public class DynamicHudClient implements ClientModInitializer {
 	public static boolean healthState = true;
 	private static long lastHealthState = System.nanoTime();
 
+	public static float foodVisibility = 1.0f;
+	public static boolean foodState = true;
+	private static long lastFoodState = System.nanoTime();
+
 	private int slot;
 	private float armorValue;
+	private int foodLevel;
 
 	@Override
 	public void onInitializeClient() {
@@ -45,6 +50,7 @@ public class DynamicHudClient implements ClientModInitializer {
 				UpdateHotbar();
 				UpdateHealth();
 				UpdateArmor();
+				UpdateFood();
 			}
 		);
 
@@ -73,6 +79,30 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		healthVisibility = lerp(healthVisibility, healthState, time * 0.1f, 1/(deltaTicks * 0.05f));
+	}
+
+	private void UpdateFood(){
+		if (this.minecraft.player == null) return;
+
+		float threshold = 10.0f;
+		int foodLevel = this.minecraft.player.getFoodData().getFoodLevel();
+
+		if (foodLevel < threshold || foodLevel != this.foodLevel){
+			lastFoodState = System.nanoTime();
+			this.foodLevel = foodLevel;
+		}
+
+		float time = 3.0f;
+
+		if (lastFoodState + (time * 1000000000L) > System.nanoTime()){
+			foodState = true;
+		} else {
+			foodState = false;
+		}
+
+		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
+
+		foodVisibility = lerp(foodVisibility, foodState, time * 0.1f, 1/(deltaTicks * 0.05f));
 	}
 
 	private void UpdateArmor(){
