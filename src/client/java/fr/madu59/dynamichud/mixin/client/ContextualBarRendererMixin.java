@@ -1,12 +1,13 @@
-package com.example.mixin.client;
+package fr.madu59.dynamichud.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import fr.madu59.dynamichud.DynamicHudClient;
+
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-import com.example.DynamicHudClient;
 
 import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
 

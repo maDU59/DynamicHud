@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "com.example.mixin.client",
+	"package": "fr.madu59.dynamichud.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"CrosshairVisibilityMixin",

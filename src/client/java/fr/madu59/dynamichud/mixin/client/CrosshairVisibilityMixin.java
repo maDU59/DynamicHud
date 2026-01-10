@@ -1,4 +1,4 @@
-package com.example.mixin.client;
+package fr.madu59.dynamichud.mixin.client;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -18,8 +18,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.example.DynamicHudClient;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+
+import fr.madu59.dynamichud.DynamicHudClient;
 
 @Mixin(Gui.class)
 public class CrosshairVisibilityMixin {

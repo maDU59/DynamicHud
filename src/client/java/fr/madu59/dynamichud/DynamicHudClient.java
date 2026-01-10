@@ -1,4 +1,4 @@
-package com.example;
+package fr.madu59.dynamichud;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
