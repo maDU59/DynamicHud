@@ -2,7 +2,7 @@ package fr.madu59.dynamichud.config;
 
 import net.minecraft.client.resources.language.I18n;
 
-public class Option<T extends Enum<T>> {
+public class Option<T> {
     public String id;
     public transient String name;
     public transient String description;
@@ -38,16 +38,12 @@ public class Option<T extends Enum<T>> {
         return I18n.get(this.description);
     }
 
-    public String getValueAsString() {
-        return this.value.toString();
-    }
-
-    public String getValueAsTranslatedString() {
-        return I18n.get(this.value.toString());
-    }
-
     public void setToNextValue() {
         this.value = cycle(this.value);
+    }
+
+    public void setValue(T value){
+        this.value = value;
     }
 
     public void setName(String name){
@@ -58,10 +54,14 @@ public class Option<T extends Enum<T>> {
         this.description = description;
     }
 
+    @SuppressWarnings("unchecked")
     public T cycle(T value) {
-        T[] constants = value.getDeclaringClass().getEnumConstants();
-        int nextOrdinal = (value.ordinal() + 1) % constants.length;
-        return constants[nextOrdinal];
+        if (value instanceof Enum<?> enumValue) {
+            Enum<?>[] constants = enumValue.getDeclaringClass().getEnumConstants();
+            int nextOrdinal = (enumValue.ordinal() + 1) % constants.length;
+            return (T) constants[nextOrdinal];
+        }
+        else return null;
     }
 
     public static enum ElementState {

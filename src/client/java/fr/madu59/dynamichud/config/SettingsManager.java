@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 
 import fr.madu59.dynamichud.DynamicHudMod;
 import fr.madu59.dynamichud.config.SettingsManager;
+import fr.madu59.dynamichud.helpers.EasingFunctions;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -77,6 +78,41 @@ public class SettingsManager<T extends Enum<T>> {
         Option.CrosshairState.ADAPTIVE
     );
 
+    public static Option<EasingFunctions.Type> EASING_FUNCTION = loadOptionWithDefaults(
+        "easing_function",
+        "dynamichud.config.option.easing_function.name",
+        "dynamichud.config.option.easing_function.description",
+        EasingFunctions.Type.LINEAR
+    );
+
+    public static Option<EasingFunctions.FadingType> FADEIN_TYPE = loadOptionWithDefaults(
+        "fadein_type",
+        "dynamichud.config.option.fadein_type.name",
+        "dynamichud.config.option.fadein_type.description",
+        EasingFunctions.FadingType.INSTANT
+    );
+
+    public static Option<EasingFunctions.FadingType> FADEOUT_TYPE = loadOptionWithDefaults(
+        "fadeout_type",
+        "dynamichud.config.option.fadeout_type.name",
+        "dynamichud.config.option.fadeout_type.description",
+        EasingFunctions.FadingType.SMOOTH
+    );
+
+    public static Option<Float> FADING_DURATION = loadOptionWithDefaults(
+        "fading_duration",
+        "dynamichud.config.option.fading_duration.name",
+        "dynamichud.config.option.fading_duration.description",
+        0.3f
+    );
+
+    public static Option<Float> SHOWN_DURATION = loadOptionWithDefaults(
+        "shown_duration",
+        "dynamichud.config.option.shown_duration.name",
+        "dynamichud.config.option.shown_duration.description",
+        3.0f
+    );
+
     public static void saveSettings(List<Option<?>> options) {
         Map<String, String> map = toMap(options);
         try {
@@ -108,13 +144,20 @@ public class SettingsManager<T extends Enum<T>> {
         }
     }
 
-    private static <T extends Enum<T>> T getOptionValue(String key, Class<T> enumClass) {
+    @SuppressWarnings("unchecked")
+    private static <T> T getOptionValue(String key, T defaultValue) {
         if (loadedSettings == null || !loadedSettings.containsKey(key)) return null;
-        else return Enum.valueOf(enumClass, loadedSettings.get(key));
+        else if (defaultValue instanceof Enum<?> e){
+            return (T) Enum.valueOf(e.getDeclaringClass(), loadedSettings.get(key));
+        }
+        else if (defaultValue instanceof Float){
+            return (T) Float.valueOf(loadedSettings.get(key));
+        }
+        else return null;
     }
 
-    private static <T extends Enum<T>> Option<T> loadOptionWithDefaults(String id, String name, String description, T defaultValue) {
-        T optionValue= getOptionValue(id, defaultValue.getDeclaringClass());
+    private static <T> Option<T> loadOptionWithDefaults(String id, String name, String description, T defaultValue) {
+        T optionValue= getOptionValue(id, defaultValue);
         if (optionValue == null) optionValue = defaultValue;
         Option<T> option = new Option<T>(
                 id,

@@ -2,6 +2,7 @@ package fr.madu59.dynamichud;
 
 import fr.madu59.dynamichud.config.Option;
 import fr.madu59.dynamichud.config.SettingsManager;
+import fr.madu59.dynamichud.helpers.EasingFunctions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -35,30 +36,37 @@ public class DynamicHudClient implements ClientModInitializer {
 
 	public static float armorVisibility = 1.0f;
 	public static boolean armorState = true;
+	private static float armorLinear = 1.0f;
 	private static long lastArmorState = System.nanoTime();
 
 	public static float hotbarVisibility = 1.0f;
 	public static boolean hotbarState = true;
+	private static float hotbarLinear = 1.0f;
 	private static long lastHotbarState = System.nanoTime();
 
 	public static float healthVisibility = 1.0f;
 	public static boolean healthState = true;
+	private static float healthLinear = 1.0f;
 	private static long lastHealthState = System.nanoTime();
 
 	public static float foodVisibility = 1.0f;
 	public static boolean foodState = true;
+	private static float foodLinear = 1.0f;
 	private static long lastFoodState = System.nanoTime();
 
 	public static float vehicleHealthVisibility = 1.0f;
 	public static boolean vehicleHealthState = true;
+	private static float vehicleHealthLinear = 1.0f;
 	private static long lastVehicleHealthState = System.nanoTime();
 
 	public static float contextualBarVisibility = 1.0f;
 	public static boolean contextualBarState = true;
+	private static float contextualBarLinear = 1.0f;
 	private static long lastContextualBarState = System.nanoTime();
 
 	public static float xpVisibility = 1.0f;
 	public static boolean xpState = true;
+	private static float xpLinear = 1.0f;
 	private static long lastXpState = System.nanoTime();
 
 	private int slot;
@@ -93,7 +101,8 @@ public class DynamicHudClient implements ClientModInitializer {
 	private void UpdateHealth(){
 		if (this.minecraft.player == null) return;
 
-		float time = 3.0f;
+		float time = SettingsManager.SHOWN_DURATION.getValue();
+		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState healthStateSetting = SettingsManager.HEALTH_STATE.getValue();
 
 		if (this.minecraft.player.getHealth() < this.minecraft.player.getMaxHealth()){
@@ -108,13 +117,15 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		healthVisibility = lerp(healthVisibility, healthState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		healthLinear = lerp(healthLinear, healthState, fadingDuration, 1/(deltaTicks * 0.05f));
+		healthVisibility = EasingFunctions.ease(healthLinear, SettingsManager.EASING_FUNCTION.getValue());
 	}
 
 	private void UpdateVehicleHealth(){
 		if (this.minecraft.player == null) return;
 
-		float time = 3.0f;
+		float time = SettingsManager.SHOWN_DURATION.getValue();
+		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState mountHealthStateSetting = SettingsManager.MOUNT_HEALTH_STATE.getValue();
 
 		Entity vehicle = this.minecraft.player.getVehicle();
@@ -131,13 +142,15 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		vehicleHealthVisibility = lerp(vehicleHealthVisibility, vehicleHealthState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		vehicleHealthLinear = lerp(vehicleHealthLinear, vehicleHealthState, fadingDuration, 1/(deltaTicks * 0.05f));
+		vehicleHealthVisibility = EasingFunctions.ease(vehicleHealthLinear, SettingsManager.EASING_FUNCTION.getValue());
 	}
 
 	private void UpdateFood(){
 		if (this.minecraft.player == null) return;
 
-		float time = 3.0f;
+		float time = SettingsManager.SHOWN_DURATION.getValue();
+		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState foodStateSetting = SettingsManager.FOOD_STATE.getValue();
 
 		float threshold = 10.0f;
@@ -161,13 +174,15 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		foodVisibility = lerp(foodVisibility, foodState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		foodLinear = lerp(foodLinear, foodState, fadingDuration, 1/(deltaTicks * 0.05f));
+		foodVisibility = EasingFunctions.ease(foodLinear, SettingsManager.EASING_FUNCTION.getValue());
 	}
 
 	private void UpdateArmor(){
 		if (this.minecraft.player == null) return;
 
-		float time = 3.0f;
+		float time = SettingsManager.SHOWN_DURATION.getValue();
+		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState armorStateSetting = SettingsManager.ARMOR_STATE.getValue();
 
 		float armorValue = this.minecraft.player.getArmorValue() + this.minecraft.player.getArmorCoverPercentage() * 0.1f;
@@ -187,14 +202,16 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		armorVisibility = lerp(armorVisibility, armorState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		armorLinear = lerp(armorLinear, armorState, fadingDuration, 1/(deltaTicks * 0.05f));
+		armorVisibility = EasingFunctions.ease(armorLinear, SettingsManager.EASING_FUNCTION.getValue());
 	}
 
 	private void UpdateContextualBar(){
 
 		if (this.minecraft.player == null) return;
 
-		float time = 3.0f;
+		float time = SettingsManager.SHOWN_DURATION.getValue();
+		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState contextualBarStateSetting = SettingsManager.CONTEXTUAL_BAR_STATE.getValue();
 
 		ContextualInfo info = getContextualInfoState();
@@ -245,15 +262,18 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		contextualBarVisibility = lerp(contextualBarVisibility, contextualBarState, time * 0.1f, 1/(deltaTicks * 0.05f));
-		xpVisibility = lerp(xpVisibility, xpState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		contextualBarLinear = lerp(contextualBarLinear, contextualBarState, fadingDuration, 1/(deltaTicks * 0.05f));
+		xpLinear = lerp(xpLinear, xpState, fadingDuration, 1/(deltaTicks * 0.05f));
+		contextualBarVisibility = EasingFunctions.ease(contextualBarLinear, SettingsManager.EASING_FUNCTION.getValue());
+		xpVisibility = EasingFunctions.ease(xpLinear, SettingsManager.EASING_FUNCTION.getValue());
 	}
 
 	private void UpdateHotbar(){
 
 		if (this.minecraft.player == null) return;
 
-		float time = 3.0f;
+		float time = SettingsManager.SHOWN_DURATION.getValue();
+		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState hotbarStateSetting = SettingsManager.HOTBAR_STATE.getValue();
 
 		int slot = this.minecraft.player.getInventory().getSelectedSlot();
@@ -270,7 +290,8 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
-		hotbarVisibility = lerp(hotbarVisibility, hotbarState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		hotbarLinear = lerp(hotbarLinear, hotbarState, fadingDuration, 1/(deltaTicks * 0.05f));
+		hotbarVisibility = EasingFunctions.ease(hotbarLinear, SettingsManager.EASING_FUNCTION.getValue());
 	}
 
 	private float lerp(float value, boolean bool, float duration, float deltaTimeSeconds){
@@ -278,14 +299,14 @@ public class DynamicHudClient implements ClientModInitializer {
 			if (value < 1.0f){
 				value += 1f/(duration * deltaTimeSeconds);
 			}
-			if (value > 1.0f){
+			if (value > 1.0f || SettingsManager.FADEIN_TYPE.getValue() == EasingFunctions.FadingType.INSTANT){
 				value = 1.0f;
 			}
 		} else {
 			if (value > 0.0f){
 				value -= 1f/(duration * deltaTimeSeconds);
 			}
-			if (value < 0.0f){
+			if (value < 0.0f || SettingsManager.FADEOUT_TYPE.getValue() == EasingFunctions.FadingType.INSTANT){
 				value = 0.0f;
 			}
 		}

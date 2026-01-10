@@ -1,5 +1,6 @@
 {
     "dynamichud.config.category.main": "Dynamic HUD settings",
+    "dynamichud.config.category.global_settings": "Global settings",
     "dynamichud.config.done": "Done",
     "dynamichud.config.option.crosshair_state.name": "Crosshair display",
     "dynamichud.config.option.hotbar_state.name": "Hotbar display",
@@ -8,5 +9,10 @@
     "dynamichud.config.option.food_state.name": "Hunger display",
     "dynamichud.config.option.air_state.name": "Air bubbles display",
     "dynamichud.config.option.mount_health_state.name": "Mount health display",
-    "dynamichud.config.option.contextual_bar_state.name": "Contextual bar display"
+    "dynamichud.config.option.contextual_bar_state.name": "Contextual bar display",
+    "dynamichud.config.option.easing_function.name": "Easing function",
+    "dynamichud.config.option.fadein_type.name": "Fade-in type",
+    "dynamichud.config.option.fadeout_type.name": "Fade-out type",
+    "dynamichud.config.option.fading_duration.name": "Fading duration (in seconds)",
+    "dynamichud.config.option.shown_duration.name": "Display duration (in seconds)"
 }

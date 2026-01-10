@@ -50,6 +50,18 @@ public class DynamicHudConfigScreen extends Screen {
         list.addButton(SettingsManager.MOUNT_HEALTH_STATE, btn -> {
             SettingsManager.MOUNT_HEALTH_STATE.setToNextValue();
         });
+        list.addCategory("dynamichud.config.category.global_settings");
+        list.addButton(SettingsManager.EASING_FUNCTION, btn -> {
+            SettingsManager.EASING_FUNCTION.setToNextValue();
+        });
+        list.addButton(SettingsManager.FADEIN_TYPE, btn -> {
+            SettingsManager.FADEIN_TYPE.setToNextValue();
+        });
+        list.addButton(SettingsManager.FADEOUT_TYPE, btn -> {
+            SettingsManager.FADEOUT_TYPE.setToNextValue();
+        });
+        list.addSlider(SettingsManager.FADING_DURATION, 0f, 1f, 0.1f);
+        list.addSlider(SettingsManager.SHOWN_DURATION, 1f, 5f, 0.1f);
 
         Button doneButton = Button.builder(Component.translatable("dynamichud.config.done"), b -> {
             this.minecraft.setScreen(this.parent);
