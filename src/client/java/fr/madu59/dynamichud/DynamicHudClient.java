@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -195,7 +196,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		else if(info == DynamicHudClient.ContextualInfo.EXPERIENCE){
 			float experienceProgress = this.minecraft.player.experienceProgress;
 
-			if(this.experienceLevel != experienceLevel || this.experienceProgress != experienceProgress){
+			if(this.experienceLevel != experienceLevel || this.experienceProgress != experienceProgress || this.minecraft.screen instanceof EnchantmentScreen){
 				lastContextualBarState = System.nanoTime();
 				lastXpState = System.nanoTime();
 				this.experienceLevel = experienceLevel;
