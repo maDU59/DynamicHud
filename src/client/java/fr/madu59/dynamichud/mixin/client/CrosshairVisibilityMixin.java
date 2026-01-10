@@ -22,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 
 import fr.madu59.dynamichud.DynamicHudClient;
+import fr.madu59.dynamichud.config.Option;
+import fr.madu59.dynamichud.config.SettingsManager;
 
 @Mixin(Gui.class)
 public class CrosshairVisibilityMixin {
@@ -29,12 +31,18 @@ public class CrosshairVisibilityMixin {
 	@Inject(at = @At("HEAD"), method = "renderCrosshair", cancellable = true)
 	private void renderCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo info) {
 
+		Option.CrosshairState crosshairStateSetting = SettingsManager.CROSSHAIR_STATE.getValue();
+
 		if(Minecraft.getInstance().player == null) return;
+		if(crosshairStateSetting == Option.CrosshairState.DISABLED) {
+			info.cancel();
+			return;
+		}
 
 		Item heldItem = Minecraft.getInstance().player.getMainHandItem().getItem();
 		HitResult hit = Minecraft.getInstance().hitResult;
 
-		if ((hit != null && hit.getType() != Type.MISS) || heldItem instanceof ProjectileItem || heldItem instanceof ProjectileWeaponItem){
+		if ((hit != null && hit.getType() != Type.MISS) || heldItem instanceof ProjectileItem || heldItem instanceof ProjectileWeaponItem || crosshairStateSetting == Option.CrosshairState.ENABLED){
 			return;
 		}
 		else{

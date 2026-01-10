@@ -69,4 +69,11 @@ public class Option<T extends Enum<T>> {
 		DYNAMIC,
 		DISABLED;
 	}
+
+    public static enum CrosshairState {
+		ENABLED,
+		DYNAMIC,
+        ADAPTIVE,
+		DISABLED;
+	}
 }

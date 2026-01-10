@@ -28,6 +28,55 @@ public class SettingsManager<T extends Enum<T>> {
         Option.ElementState.ENABLED
     );
 
+    public static Option<Option.ElementState> HEALTH_STATE = loadOptionWithDefaults(
+        "health_state",
+        "dynamichud.config.option.health_state.name",
+        "dynamichud.config.option.health_state.description",
+        Option.ElementState.DYNAMIC
+    );
+
+    public static Option<Option.ElementState> ARMOR_STATE = loadOptionWithDefaults(
+        "armor_state",
+        "dynamichud.config.option.armor_state.name",
+        "dynamichud.config.option.armor_state.description",
+        Option.ElementState.DYNAMIC
+    );
+
+    public static Option<Option.ElementState> MOUNT_HEALTH_STATE = loadOptionWithDefaults(
+        "mount_health_state",
+        "dynamichud.config.option.mount_health_state.name",
+        "dynamichud.config.option.mount_health_state.description",
+        Option.ElementState.DYNAMIC
+    );
+
+    public static Option<Option.ElementState> AIR_STATE = loadOptionWithDefaults(
+        "air_state",
+        "dynamichud.config.option.air_state.name",
+        "dynamichud.config.option.air_state.description",
+        Option.ElementState.DYNAMIC
+    );
+
+    public static Option<Option.ElementState> FOOD_STATE = loadOptionWithDefaults(
+        "food_state",
+        "dynamichud.config.option.food_state.name",
+        "dynamichud.config.option.food_state.description",
+        Option.ElementState.DYNAMIC
+    );
+
+    public static Option<Option.ElementState> CONTEXTUAL_BAR_STATE = loadOptionWithDefaults(
+        "contextual_bar_state",
+        "dynamichud.config.option.contextual_bar_state.name",
+        "dynamichud.config.option.contextual_bar_state.description",
+        Option.ElementState.DYNAMIC
+    );
+
+    public static Option<Option.CrosshairState> CROSSHAIR_STATE = loadOptionWithDefaults(
+        "crosshair_state",
+        "dynamichud.config.option.crosshair_state.name",
+        "dynamichud.config.option.crosshair_state.description",
+        Option.CrosshairState.ADAPTIVE
+    );
+
     public static void saveSettings(List<Option<?>> options) {
         Map<String, String> map = toMap(options);
         try {

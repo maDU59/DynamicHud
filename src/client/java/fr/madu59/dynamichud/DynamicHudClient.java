@@ -93,13 +93,14 @@ public class DynamicHudClient implements ClientModInitializer {
 	private void UpdateHealth(){
 		if (this.minecraft.player == null) return;
 
+		float time = 3.0f;
+		Option.ElementState healthStateSetting = SettingsManager.HEALTH_STATE.getValue();
+
 		if (this.minecraft.player.getHealth() < this.minecraft.player.getMaxHealth()){
 			lastHealthState = System.nanoTime();
 		}
 
-		float time = 3.0f;
-
-		if (lastHealthState + (time * 1000000000L) > System.nanoTime()){
+		if ((lastHealthState + (time * 1000000000L) > System.nanoTime() && healthStateSetting != Option.ElementState.DISABLED) || healthStateSetting == Option.ElementState.ENABLED){
 			healthState = true;
 		} else {
 			healthState = false;
@@ -113,15 +114,16 @@ public class DynamicHudClient implements ClientModInitializer {
 	private void UpdateVehicleHealth(){
 		if (this.minecraft.player == null) return;
 
+		float time = 3.0f;
+		Option.ElementState mountHealthStateSetting = SettingsManager.MOUNT_HEALTH_STATE.getValue();
+
 		Entity vehicle = this.minecraft.player.getVehicle();
 
 		if (vehicle != null && vehicle instanceof LivingEntity e && e.getHealth() < e.getMaxHealth()){
 			lastVehicleHealthState = System.nanoTime();
 		}
 
-		float time = 3.0f;
-
-		if (lastVehicleHealthState + (time * 1000000000L) > System.nanoTime()){
+		if ((lastVehicleHealthState + (time * 1000000000L) > System.nanoTime() && mountHealthStateSetting != Option.ElementState.DISABLED) || mountHealthStateSetting == Option.ElementState.ENABLED){
 			vehicleHealthState = true;
 		} else {
 			vehicleHealthState = false;
@@ -134,6 +136,9 @@ public class DynamicHudClient implements ClientModInitializer {
 
 	private void UpdateFood(){
 		if (this.minecraft.player == null) return;
+
+		float time = 3.0f;
+		Option.ElementState foodStateSetting = SettingsManager.FOOD_STATE.getValue();
 
 		float threshold = 10.0f;
 		int foodLevel = this.minecraft.player.getFoodData().getFoodLevel();
@@ -148,9 +153,7 @@ public class DynamicHudClient implements ClientModInitializer {
 			this.foodLevel = foodLevel;
 		}
 
-		float time = 3.0f;
-
-		if (lastFoodState + (time * 1000000000L) > System.nanoTime()){
+		if ((lastFoodState + (time * 1000000000L) > System.nanoTime() && foodStateSetting != Option.ElementState.DISABLED) || foodStateSetting == Option.ElementState.ENABLED){
 			foodState = true;
 		} else {
 			foodState = false;
@@ -164,6 +167,9 @@ public class DynamicHudClient implements ClientModInitializer {
 	private void UpdateArmor(){
 		if (this.minecraft.player == null) return;
 
+		float time = 3.0f;
+		Option.ElementState armorStateSetting = SettingsManager.ARMOR_STATE.getValue();
+
 		float armorValue = this.minecraft.player.getArmorValue() + this.minecraft.player.getArmorCoverPercentage() * 0.1f;
 		DamageSource damageSource = this.minecraft.player.getLastDamageSource();
 		boolean isHurt = this.minecraft.player.hurtTime > 0 && !damageSource.is(DamageTypeTags.BYPASSES_ARMOR);
@@ -173,9 +179,7 @@ public class DynamicHudClient implements ClientModInitializer {
 			this.armorValue = armorValue;
 		}
 
-		float time = 3.0f;
-
-		if (lastArmorState + (time * 1000000000L) > System.nanoTime()){
+		if ((lastArmorState + (time * 1000000000L) > System.nanoTime() && armorStateSetting != Option.ElementState.DISABLED) || armorStateSetting == Option.ElementState.ENABLED){
 			armorState = true;
 		} else {
 			armorState = false;
@@ -191,6 +195,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		if (this.minecraft.player == null) return;
 
 		float time = 3.0f;
+		Option.ElementState contextualBarStateSetting = SettingsManager.CONTEXTUAL_BAR_STATE.getValue();
 
 		ContextualInfo info = getContextualInfoState();
 		int experienceLevel = this.minecraft.player.experienceLevel;
@@ -225,10 +230,10 @@ public class DynamicHudClient implements ClientModInitializer {
 			}
 		}
 
-		if (lastContextualBarState + (time * 1000000000L) > System.nanoTime()){
+		if ((lastContextualBarState + (time * 1000000000L) > System.nanoTime() && contextualBarStateSetting != Option.ElementState.DISABLED) || contextualBarStateSetting == Option.ElementState.ENABLED){
 			contextualBarState = true;
 
-			if (lastXpState + (time * 1000000000L) > System.nanoTime()){
+			if (lastXpState + (time * 1000000000L) > System.nanoTime() || contextualBarStateSetting == Option.ElementState.ENABLED){
 				xpState = true;
 			} else {
 				xpState = false;
@@ -249,14 +254,13 @@ public class DynamicHudClient implements ClientModInitializer {
 		if (this.minecraft.player == null) return;
 
 		float time = 3.0f;
+		Option.ElementState hotbarStateSetting = SettingsManager.HOTBAR_STATE.getValue();
 
 		int slot = this.minecraft.player.getInventory().getSelectedSlot();
 		if(this.slot != slot){
 			lastHotbarState = System.nanoTime();
 			this.slot = slot;
 		}
-
-		Option.ElementState hotbarStateSetting = SettingsManager.HOTBAR_STATE.getValue();
 
 		if ((lastHotbarState + (time * 1000000000L) > System.nanoTime() && hotbarStateSetting != Option.ElementState.DISABLED) || hotbarStateSetting == Option.ElementState.ENABLED){
 			hotbarState = true;
@@ -310,8 +314,5 @@ public class DynamicHudClient implements ClientModInitializer {
 		EXPERIENCE,
 		LOCATOR,
 		JUMPABLE_VEHICLE;
-
-		private ContextualInfo() {
-		}
 	}
 }

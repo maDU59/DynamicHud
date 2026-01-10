@@ -26,12 +26,32 @@ public class DynamicHudConfigScreen extends Screen {
 
         // Example: Add categories + buttons
         list.addCategory("dynamichud.config.category.main");
+        list.addButton(SettingsManager.CROSSHAIR_STATE, btn -> {
+            SettingsManager.CROSSHAIR_STATE.setToNextValue();
+        });
         list.addButton(SettingsManager.HOTBAR_STATE, btn -> {
             SettingsManager.HOTBAR_STATE.setToNextValue();
         });
-        
+        list.addButton(SettingsManager.CONTEXTUAL_BAR_STATE, btn -> {
+            SettingsManager.CONTEXTUAL_BAR_STATE.setToNextValue();
+        });
+        list.addButton(SettingsManager.HEALTH_STATE, btn -> {
+            SettingsManager.HEALTH_STATE.setToNextValue();
+        });
+        list.addButton(SettingsManager.ARMOR_STATE, btn -> {
+            SettingsManager.ARMOR_STATE.setToNextValue();
+        });
+        list.addButton(SettingsManager.FOOD_STATE, btn -> {
+            SettingsManager.FOOD_STATE.setToNextValue();
+        });
+        list.addButton(SettingsManager.AIR_STATE, btn -> {
+            SettingsManager.AIR_STATE.setToNextValue();
+        });
+        list.addButton(SettingsManager.MOUNT_HEALTH_STATE, btn -> {
+            SettingsManager.MOUNT_HEALTH_STATE.setToNextValue();
+        });
 
-        Button doneButton = Button.builder(Component.literal("Done"), b -> {
+        Button doneButton = Button.builder(Component.translatable("dynamichud.config.done"), b -> {
             this.minecraft.setScreen(this.parent);
             SettingsManager.saveSettings(SettingsManager.ALL_OPTIONS);
         }).bounds(this.width / 2 - 50, this.height - 30, 100, 20).build();
