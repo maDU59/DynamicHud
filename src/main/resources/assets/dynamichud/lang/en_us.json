@@ -1,6 +1,7 @@
 {
     "dynamichud.config.category.main": "Dynamic HUD settings",
     "dynamichud.config.done": "Done",
+    "dynamichud.config.option.crosshair_state.name": "Crosshair display",
     "dynamichud.config.option.hotbar_state.name": "Hotbar display",
     "dynamichud.config.option.health_state.name": "Hearts display",
     "dynamichud.config.option.armor_state.name": "Armor display",
