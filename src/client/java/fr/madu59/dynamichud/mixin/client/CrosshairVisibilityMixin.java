@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ProjectileItem;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 
@@ -33,7 +34,7 @@ public class CrosshairVisibilityMixin {
 		Item heldItem = Minecraft.getInstance().player.getMainHandItem().getItem();
 		HitResult hit = Minecraft.getInstance().hitResult;
 
-		if ((hit != null &&hit.getType() != Type.MISS) || heldItem instanceof ProjectileItem){
+		if ((hit != null && hit.getType() != Type.MISS) || heldItem instanceof ProjectileItem || heldItem instanceof ProjectileWeaponItem){
 			return;
 		}
 		else{
