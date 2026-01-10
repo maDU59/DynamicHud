@@ -5,11 +5,13 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.world.food.FoodProperties;
 
 public class DynamicHudClient implements ClientModInitializer {
 
@@ -133,7 +135,12 @@ public class DynamicHudClient implements ClientModInitializer {
 		float threshold = 10.0f;
 		int foodLevel = this.minecraft.player.getFoodData().getFoodLevel();
 
-		if (foodLevel < threshold || foodLevel != this.foodLevel){
+		FoodProperties mainHandFood = this.minecraft.player.getMainHandItem().get(DataComponents.FOOD);
+
+		if (foodLevel < threshold || 
+			foodLevel != this.foodLevel || 
+			(mainHandFood != null && mainHandFood.nutrition() > 0 && this.minecraft.player.getFoodData().needsFood())
+		){
 			lastFoodState = System.nanoTime();
 			this.foodLevel = foodLevel;
 		}
@@ -196,7 +203,7 @@ public class DynamicHudClient implements ClientModInitializer {
 			}
 		} else if(info == DynamicHudClient.ContextualInfo.LOCATOR){
 			lastContextualBarState = System.nanoTime();
-			
+
 			if(this.experienceLevel != experienceLevel){
 				lastXpState = System.nanoTime();
 				this.experienceLevel = experienceLevel;

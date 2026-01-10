@@ -61,12 +61,12 @@ public class CrosshairVisibilityMixin {
 
 	@ModifyVariable(method = "renderPlayerHealth", at = @At("STORE"), ordinal = 4)
 	private int offsetPlayerInformationsY(int y) {
-		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
+		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + (int)(DynamicHudClient.xpHeight * DynamicHudClient.contextualBarVisibility) + DynamicHudClient.aboveHotbarOffsetY);
 	}
 
 	@ModifyVariable(method = "renderVehicleHealth", at = @At("STORE"), ordinal = 2)
 	private int offsetVehicleHealthY(int y) {
-		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + DynamicHudClient.xpHeight + DynamicHudClient.aboveHotbarOffsetY);
+		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + (int)(DynamicHudClient.xpHeight * DynamicHudClient.contextualBarVisibility) + DynamicHudClient.aboveHotbarOffsetY);
 	}
 
 	//#region Opacity mixins
@@ -127,32 +127,4 @@ public class CrosshairVisibilityMixin {
 	private static int offsetAirY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k) {
 		return n + 10 - (int)(10*DynamicHudClient.foodVisibility);
 	}
-
-	// @ModifyVariable(method = "renderHearts", at = @At("HEAD"), ordinal = 1)
-	// private int offsetHealthY(int y) {
-	// 	return y + 39 - (hotbarOffsetY + xpOffsetY);
-	// }
-
-	// @ModifyVariable(method = "renderFood", at = @At("HEAD"), ordinal = 0)
-	// private int offsetFoodY(int y) {
-	// 	return y + 39 - (hotbarOffsetY + xpOffsetY);
-	// }
-
-	// @ModifyVariable(method = "renderVehicleHealth", at = @At("STORE"), ordinal = 2)
-	// private int offsetAnimalHealthY(int y) {
-	// 	return y + 39 - (hotbarOffsetY + xpOffsetY);
-	// }
-
-	// heldItem.useOn(useOnContext) == InteractionResult.SUCCESS
-	// UseOnContext useOnContext = new UseOnContext(Minecraft.getInstance().player, InteractionHand.MAIN_HAND, getBlockHitResult());
-
-	// private BlockHitResult getBlockHitResult(){
-	// 	HitResult hit = Minecraft.getInstance().hitResult;
-
-	// 	if (hit != null && hit.getType() != HitResult.Type.ENTITY) {
-	// 		return (BlockHitResult) hit;
-	// 	} else {
-	// 		//return new BlockHitResult();
-	// 	}
-	// }
 }
