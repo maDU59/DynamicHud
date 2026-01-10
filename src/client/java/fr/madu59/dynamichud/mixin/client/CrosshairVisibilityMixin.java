@@ -28,6 +28,8 @@ import fr.madu59.dynamichud.config.SettingsManager;
 @Mixin(Gui.class)
 public class CrosshairVisibilityMixin {
 
+	//#region Crosshair mixins
+
 	@Inject(at = @At("HEAD"), method = "renderCrosshair", cancellable = true)
 	private void renderCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo info) {
 
@@ -49,6 +51,10 @@ public class CrosshairVisibilityMixin {
 			info.cancel();
 		}
 	}
+
+	//#endregion
+
+	//#region Positon adjustment mixins
 
 	@Inject(at = @At("HEAD"), method = "renderItemHotbar", cancellable = true)
 	private void renderItemHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo info) {
@@ -77,6 +83,18 @@ public class CrosshairVisibilityMixin {
 	private int offsetVehicleHealthY(int y) {
 		return y + 39 - (10 + (int) (DynamicHudClient.hotbarHeight * DynamicHudClient.hotbarVisibility) + (int)(DynamicHudClient.xpHeight * DynamicHudClient.contextualBarVisibility) + DynamicHudClient.aboveHotbarOffsetY);
 	}
+
+	@ModifyVariable(method = "renderArmor", at = @At("STORE"), ordinal = 5)
+	private static int offsetArmorY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k, int l) {
+		return i - (int)(((j - 1) * k + 10) * DynamicHudClient.healthVisibility);
+	}
+
+	@ModifyVariable(method = "renderAirBubbles", at = @At("HEAD"), ordinal = 1)
+	private static int offsetAirY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k) {
+		return n + 10 - (int)(10*DynamicHudClient.foodVisibility);
+	}
+
+	//#endregion
 
 	//#region Opacity mixins
 
@@ -126,14 +144,4 @@ public class CrosshairVisibilityMixin {
 	}
 
 	//#endregion
-
-	@ModifyVariable(method = "renderArmor", at = @At("STORE"), ordinal = 5)
-	private static int offsetArmorY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k, int l) {
-		return i - (int)(((j - 1) * k + 10) * DynamicHudClient.healthVisibility);
-	}
-
-	@ModifyVariable(method = "renderAirBubbles", at = @At("HEAD"), ordinal = 1)
-	private static int offsetAirY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k) {
-		return n + 10 - (int)(10*DynamicHudClient.foodVisibility);
-	}
 }
