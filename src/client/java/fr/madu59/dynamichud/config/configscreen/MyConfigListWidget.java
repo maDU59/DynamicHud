@@ -196,14 +196,12 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
         private final String name;
         private final String description;
         private final String indent;
-        private final Option<?> option;
 
         public SliderEntry(AbstractSliderButton slider, Option<?> option, String indent) {
             this.slider = slider;
             this.name = option.getName();
             this.description = option.getDescription();
             this.indent = indent;
-            this.option = option;
         }
 
         @Override
