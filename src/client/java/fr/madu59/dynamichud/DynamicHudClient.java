@@ -6,6 +6,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 public class DynamicHudClient implements ClientModInitializer {
 
@@ -40,6 +42,10 @@ public class DynamicHudClient implements ClientModInitializer {
 	public static boolean foodState = true;
 	private static long lastFoodState = System.nanoTime();
 
+	public static float vehicleHealthVisibility = 1.0f;
+	public static boolean vehicleHealthState = true;
+	private static long lastVehicleHealthState = System.nanoTime();
+
 	private int slot;
 	private float armorValue;
 	private int foodLevel;
@@ -51,6 +57,7 @@ public class DynamicHudClient implements ClientModInitializer {
 				UpdateHealth();
 				UpdateArmor();
 				UpdateFood();
+				UpdateVehicleHealth();
 			}
 		);
 
@@ -58,6 +65,8 @@ public class DynamicHudClient implements ClientModInitializer {
 			lastHotbarState = System.nanoTime();
 			lastHealthState = System.nanoTime();
 			lastArmorState = System.nanoTime();
+			lastFoodState = System.nanoTime();
+			lastVehicleHealthState = System.nanoTime();
 		});
 	}
 
@@ -79,6 +88,28 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		healthVisibility = lerp(healthVisibility, healthState, time * 0.1f, 1/(deltaTicks * 0.05f));
+	}
+
+	private void UpdateVehicleHealth(){
+		if (this.minecraft.player == null) return;
+
+		Entity vehicle = this.minecraft.player.getVehicle();
+
+		if (vehicle != null && vehicle instanceof LivingEntity e && e.getHealth() < e.getMaxHealth()){
+			lastVehicleHealthState = System.nanoTime();
+		}
+
+		float time = 3.0f;
+
+		if (lastVehicleHealthState + (time * 1000000000L) > System.nanoTime()){
+			vehicleHealthState = true;
+		} else {
+			vehicleHealthState = false;
+		}
+
+		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
+
+		vehicleHealthVisibility = lerp(vehicleHealthVisibility, vehicleHealthState, time * 0.1f, 1/(deltaTicks * 0.05f));
 	}
 
 	private void UpdateFood(){

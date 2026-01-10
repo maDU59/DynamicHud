@@ -107,11 +107,25 @@ public class CrosshairVisibilityMixin {
 		instance.blitSprite(pipeline, id, x, y, width, height, DynamicHudClient.healthVisibility);
 	}
 
+	@Redirect(
+		method = "renderVehicleHealth",
+		at = @At(value = "INVOKE", 
+				target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
+	)
+	private void redirectVehicleHealthBlit(GuiGraphics instance, RenderPipeline pipeline, Identifier id, int x, int y, int width, int height) {
+		instance.blitSprite(pipeline, id, x, y, width, height, DynamicHudClient.vehicleHealthVisibility);
+	}
+
 	//#endregion
 
 	@ModifyVariable(method = "renderArmor", at = @At("STORE"), ordinal = 5)
 	private static int offsetArmorY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k, int l) {
 		return i - (int)(((j - 1) * k + 10) * DynamicHudClient.healthVisibility);
+	}
+
+	@ModifyVariable(method = "renderAirBubbles", at = @At("HEAD"), ordinal = 1)
+	private static int offsetAirY(int n, GuiGraphics guiGraphics, Player player, int i, int j, int k) {
+		return n + 10 - (int)(10*DynamicHudClient.foodVisibility);
 	}
 
 	// @ModifyVariable(method = "renderHearts", at = @At("HEAD"), ordinal = 1)
