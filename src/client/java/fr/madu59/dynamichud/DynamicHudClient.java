@@ -1,5 +1,7 @@
 package fr.madu59.dynamichud;
 
+import fr.madu59.dynamichud.config.Option;
+import fr.madu59.dynamichud.config.SettingsManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -254,7 +256,9 @@ public class DynamicHudClient implements ClientModInitializer {
 			this.slot = slot;
 		}
 
-		if (lastHotbarState + (time * 1000000000L) > System.nanoTime()){
+		Option.ElementState hotbarStateSetting = SettingsManager.HOTBAR_STATE.getValue();
+
+		if ((lastHotbarState + (time * 1000000000L) > System.nanoTime() && hotbarStateSetting != Option.ElementState.DISABLED) || hotbarStateSetting == Option.ElementState.ENABLED){
 			hotbarState = true;
 		} else {
 			hotbarState = false;

@@ -41,11 +41,11 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
         this.addEntry(new ButtonEntry(Button.builder(Component.literal(name), onPress).bounds(0, 0, 100, 20).build(), null, ""));
     }
 
-    public void addButton(Option option, Button.OnPress onPress) {
+    public void addButton(Option<?> option, Button.OnPress onPress) {
         this.addEntry(new ButtonEntry(Button.builder(Component.literal(option.getValueAsTranslatedString()), onPress).bounds(0, 0, 100, 20).build(), option, ""));
     }
 
-    public void addButton(Option option, Button.OnPress onPress, String indent) {
+    public void addButton(Option<?> option, Button.OnPress onPress, String indent) {
         this.addEntry(new ButtonEntry(Button.builder(Component.literal(option.getValueAsTranslatedString()), onPress).bounds(0, 0, 100, 20).build(), option, indent));
     }
 
@@ -85,9 +85,9 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
         private final String name;
         private final String description;
         private final String indent;
-        private final Option option;
+        private final Option<?> option;
 
-        public ButtonEntry(Button button, Option option, String indent) {
+        public ButtonEntry(Button button, Option<?> option, String indent) {
             this.button = button;
             this.name = option.getName();
             this.description = option.getDescription();

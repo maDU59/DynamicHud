@@ -26,6 +26,9 @@ public class DynamicHudConfigScreen extends Screen {
 
         // Example: Add categories + buttons
         list.addCategory("dynamichud.config.category.main");
+        list.addButton(SettingsManager.HOTBAR_STATE, btn -> {
+            SettingsManager.HOTBAR_STATE.setToNextValue();
+        });
         
 
         Button doneButton = Button.builder(Component.literal("Done"), b -> {
