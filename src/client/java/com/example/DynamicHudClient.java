@@ -1,20 +1,11 @@
 package com.example;
 
-import java.util.Iterator;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.ServerInfo;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlot.Type;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class DynamicHudClient implements ClientModInitializer {
 
@@ -89,7 +80,7 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		float armorValue = this.minecraft.player.getArmorValue() + this.minecraft.player.getArmorCoverPercentage() * 0.1f;
 		DamageSource damageSource = this.minecraft.player.getLastDamageSource();
-		boolean isHurt = this.minecraft.player.hurtTime > 0 && (!damageSource.is(DamageTypeTags.BYPASSES_ARMOR) || damageSource.is(DamageTypeTags.IS_FALL));
+		boolean isHurt = this.minecraft.player.hurtTime > 0 && !damageSource.is(DamageTypeTags.BYPASSES_ARMOR);
 
 		if(this.armorValue != armorValue || isHurt){
 			lastArmorState = System.nanoTime();
@@ -149,24 +140,5 @@ public class DynamicHudClient implements ClientModInitializer {
 			}
 		}
 		return value;
-	}
-
-	private int getTotalArmorDamage(){
-		if (this.minecraft.player == null) return 0;
-
-		int damageValue = 0;
-		Iterator var3 = EquipmentSlotGroup.ARMOR.iterator();
-
-		while(var3.hasNext()) {
-			EquipmentSlot equipmentSlot = (EquipmentSlot)var3.next();
-			if (equipmentSlot.getType() == Type.HUMANOID_ARMOR) {
-				ItemStack itemStack = this.minecraft.player.getItemBySlot(equipmentSlot);
-				if (!itemStack.isEmpty() && !(itemStack.is(Items.ELYTRA))) {
-					damageValue += itemStack.getDamageValue();
-				}
-			}
-		}
-
-		return damageValue;
 	}
 }
