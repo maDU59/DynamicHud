@@ -3,11 +3,13 @@ package fr.madu59.dynamichud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.Optionull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PlayerRideableJumping;
 
 public class DynamicHudClient implements ClientModInitializer {
 
@@ -46,18 +48,30 @@ public class DynamicHudClient implements ClientModInitializer {
 	public static boolean vehicleHealthState = true;
 	private static long lastVehicleHealthState = System.nanoTime();
 
+	public static float contextualBarVisibility = 1.0f;
+	public static boolean contextualBarState = true;
+	private static long lastContextualBarState = System.nanoTime();
+
+	public static float xpVisibility = 1.0f;
+	public static boolean xpState = true;
+	private static long lastXpState = System.nanoTime();
+
 	private int slot;
 	private float armorValue;
 	private int foodLevel;
+	private float experienceProgress;
+	private int experienceLevel;
 
 	@Override
 	public void onInitializeClient() {
+
 		HudRenderCallback.EVENT.register((drawContext, delta) -> {
 				UpdateHotbar();
 				UpdateHealth();
 				UpdateArmor();
 				UpdateFood();
 				UpdateVehicleHealth();
+				UpdateContextualBar();
 			}
 		);
 
@@ -67,6 +81,7 @@ public class DynamicHudClient implements ClientModInitializer {
 			lastArmorState = System.nanoTime();
 			lastFoodState = System.nanoTime();
 			lastVehicleHealthState = System.nanoTime();
+			lastContextualBarState = System.nanoTime();
 		});
 	}
 
@@ -161,6 +176,64 @@ public class DynamicHudClient implements ClientModInitializer {
 		armorVisibility = lerp(armorVisibility, armorState, time * 0.1f, 1/(deltaTicks * 0.05f));
 	}
 
+	private void UpdateContextualBar(){
+
+		if (this.minecraft.player == null) return;
+
+		float time = 3.0f;
+
+		ContextualInfo info = getContextualInfoState();
+		int experienceLevel = this.minecraft.player.experienceLevel;
+		if (info == DynamicHudClient.ContextualInfo.EMPTY) return;
+		else if(info == DynamicHudClient.ContextualInfo.EXPERIENCE){
+			float experienceProgress = this.minecraft.player.experienceProgress;
+
+			if(this.experienceLevel != experienceLevel || this.experienceProgress != experienceProgress){
+				lastContextualBarState = System.nanoTime();
+				lastXpState = System.nanoTime();
+				this.experienceLevel = experienceLevel;
+				this.experienceProgress = experienceProgress;
+			}
+		} else if(info == DynamicHudClient.ContextualInfo.LOCATOR){
+			lastContextualBarState = System.nanoTime();
+			
+			if(this.experienceLevel != experienceLevel){
+				lastXpState = System.nanoTime();
+				this.experienceLevel = experienceLevel;
+			}
+		} else if(info == DynamicHudClient.ContextualInfo.JUMPABLE_VEHICLE){
+			if (this.minecraft.player.jumpableVehicle().getJumpCooldown() > 0){
+				lastContextualBarState = System.nanoTime();
+			}
+			else if (this.minecraft.player.getJumpRidingScale() > 0.0F){
+				lastContextualBarState = System.nanoTime();
+			}
+
+			if(this.experienceLevel != experienceLevel){
+				lastXpState = System.nanoTime();
+				this.experienceLevel = experienceLevel;
+			}
+		}
+
+		if (lastContextualBarState + (time * 1000000000L) > System.nanoTime()){
+			contextualBarState = true;
+
+			if (lastXpState + (time * 1000000000L) > System.nanoTime()){
+				xpState = true;
+			} else {
+				xpState = false;
+			}
+		} else {
+			contextualBarState = false;
+			xpState = false;
+		}
+
+		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
+
+		contextualBarVisibility = lerp(contextualBarVisibility, contextualBarState, time * 0.1f, 1/(deltaTicks * 0.05f));
+		xpVisibility = lerp(xpVisibility, xpState, time * 0.1f, 1/(deltaTicks * 0.05f));
+	}
+
 	private void UpdateHotbar(){
 
 		if (this.minecraft.player == null) return;
@@ -201,5 +274,32 @@ public class DynamicHudClient implements ClientModInitializer {
 			}
 		}
 		return value;
+	}
+
+	private ContextualInfo getContextualInfoState(){
+		boolean bl = this.minecraft.player.connection.getWaypointManager().hasWaypoints();
+		boolean bl2 = this.minecraft.player.jumpableVehicle() != null;
+		boolean bl3 = this.minecraft.gameMode.hasExperience();
+		if (bl) {
+			if (bl2 && (this.minecraft.player.getJumpRidingScale() > 0.0F || (Integer)Optionull.mapOrDefault(this.minecraft.player.jumpableVehicle(), PlayerRideableJumping::getJumpCooldown, 0) > 0)) {
+				return DynamicHudClient.ContextualInfo.JUMPABLE_VEHICLE;
+			} else {
+				return bl3 && (this.minecraft.player.experienceDisplayStartTick + 100 > this.minecraft.player.tickCount) ? DynamicHudClient.ContextualInfo.EXPERIENCE : DynamicHudClient.ContextualInfo.LOCATOR;
+			}
+		} else if (bl2) {
+			return DynamicHudClient.ContextualInfo.JUMPABLE_VEHICLE;
+		} else {
+			return bl3 ? DynamicHudClient.ContextualInfo.EXPERIENCE : DynamicHudClient.ContextualInfo.EMPTY;
+		}
+	}
+
+	static enum ContextualInfo {
+		EMPTY,
+		EXPERIENCE,
+		LOCATOR,
+		JUMPABLE_VEHICLE;
+
+		private ContextualInfo() {
+		}
 	}
 }
