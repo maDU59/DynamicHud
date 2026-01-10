@@ -80,6 +80,15 @@ public class CrosshairVisibilityMixin {
 	}
 
 	@Redirect(
+		method = "renderArmor",
+		at = @At(value = "INVOKE", 
+				target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
+	)
+	private static void redirectArmorBlit(GuiGraphics instance, RenderPipeline pipeline, Identifier id, int x, int y, int width, int height) {
+		instance.blitSprite(pipeline, id, x, y, width, height, DynamicHudClient.armorVisibility);
+	}
+
+	@Redirect(
 		method = "renderHeart",
 		at = @At(value = "INVOKE", 
 				target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
