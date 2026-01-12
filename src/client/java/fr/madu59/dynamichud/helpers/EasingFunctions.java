@@ -1,5 +1,8 @@
 package fr.madu59.dynamichud.helpers;
 
+import fr.madu59.dynamichud.config.Option;
+import fr.madu59.dynamichud.config.SettingsManager;
+
 public class EasingFunctions {
 
     public static float ease(float t, Type type, boolean bool, float value, float dt, float speed) {
@@ -21,7 +24,9 @@ public class EasingFunctions {
             case SQUARE_ROOT:
                 return (float)(bool? Math.sqrt(t):(1-Math.sqrt(1-t)));
             case EXPONENTIAL:
-            return value + (float)(((bool?1:0) - value) * (1 - Math.exp(-dt * (1.1-speed))));
+                if(bool && SettingsManager.FADEIN_TYPE.getValue() == EasingFunctions.FadingType.INSTANT) return 1;
+                if(!bool && SettingsManager.FADEOUT_TYPE.getValue() == EasingFunctions.FadingType.INSTANT) return 0;
+                return value + (float)(((bool?1:0) - value) * (1 - Math.exp(-dt * (1.1-speed))));
             default:
                 return t;
         }
