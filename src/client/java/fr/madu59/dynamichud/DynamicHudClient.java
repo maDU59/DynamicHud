@@ -153,7 +153,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		float fadingDuration = SettingsManager.FADING_DURATION.getValue();
 		Option.ElementState foodStateSetting = SettingsManager.FOOD_STATE.getValue();
 
-		float threshold = 10.0f;
+		float threshold = SettingsManager.DYNAMIC_FOOD_BAR_MINIMUM.getValue() * 2;
 		int foodLevel = this.minecraft.player.getFoodData().getFoodLevel();
 
 		FoodProperties mainHandFood = this.minecraft.player.getMainHandItem().get(DataComponents.FOOD);

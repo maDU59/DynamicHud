@@ -1,9 +1,6 @@
 package fr.madu59.dynamichud.config.configscreen;
 
 import java.util.List;
-
-import fr.madu59.dynamichud.config.configscreen.MyConfigListWidget;
-
 import fr.madu59.dynamichud.config.Option;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -51,6 +48,10 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
     }
 
     public <N extends Number> void addSlider(Option<N> option, N min, N max, N step) {
+        addSlider(option, min, max, step, "");
+    }
+
+    public <N extends Number> void addSlider(Option<N> option, N min, N max, N step, String indent) {
 
         double dMin = min.doubleValue();
         double dMax = max.doubleValue();
@@ -106,7 +107,7 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
                     option.setValue((N)(Object) newValue);
                 }
             }
-        }, option, ""));
+        }, option, indent));
     }
 
     // Base entry

@@ -44,6 +44,7 @@ public class DynamicHudConfigScreen extends Screen {
         list.addButton(SettingsManager.FOOD_STATE, btn -> {
             SettingsManager.FOOD_STATE.setToNextValue();
         });
+        list.addSlider(SettingsManager.DYNAMIC_FOOD_BAR_MINIMUM, 0f, 10f, 0.5f, INDENT);
         list.addButton(SettingsManager.AIR_STATE, btn -> {
             SettingsManager.AIR_STATE.setToNextValue();
         });

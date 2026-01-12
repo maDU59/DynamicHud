@@ -15,7 +15,7 @@ import java.util.*;
 
 import net.fabricmc.loader.api.FabricLoader;
 
-public class SettingsManager<T extends Enum<T>> {
+public class SettingsManager {
 
     public static List<Option<?>> ALL_OPTIONS = new ArrayList<>();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -113,6 +113,13 @@ public class SettingsManager<T extends Enum<T>> {
         3.0f
     );
 
+    public static Option<Float> DYNAMIC_FOOD_BAR_MINIMUM = loadOptionWithDefaults(
+        "dynamic_food_bar_minimum",
+        "dynamichud.config.option.shown_duration.name",
+        "dynamichud.config.option.shown_duration.description",
+        2.5f
+    );
+
     public static void saveSettings(List<Option<?>> options) {
         Map<String, String> map = toMap(options);
         try {
@@ -166,7 +173,6 @@ public class SettingsManager<T extends Enum<T>> {
                 optionValue,
                 defaultValue
         );
-        ALL_OPTIONS.add(option);
         return option;
     }
 }
