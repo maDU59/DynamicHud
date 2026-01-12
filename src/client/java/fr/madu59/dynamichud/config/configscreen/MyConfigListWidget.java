@@ -40,11 +40,11 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
     }
 
     public void addButton(Option<?> option, Button.OnPress onPress) {
-        this.addEntry(new ButtonEntry(Button.builder(Component.translatable(option.getValue().toString()), onPress).bounds(0, 0, 100, 20).build(), option, ""));
+        this.addEntry(new ButtonEntry(Button.builder(Component.translatable("dynamichud.config.value." + option.getValue().toString().toLowerCase()), onPress).bounds(0, 0, 100, 20).build(), option, ""));
     }
 
     public void addButton(Option<?> option, Button.OnPress onPress, String indent) {
-        this.addEntry(new ButtonEntry(Button.builder(Component.translatable(option.getValue().toString()), onPress).bounds(0, 0, 100, 20).build(), option, indent));
+        this.addEntry(new ButtonEntry(Button.builder(Component.translatable("dynamichud.config.value." + option.getValue().toString().toLowerCase()), onPress).bounds(0, 0, 100, 20).build(), option, indent));
     }
 
     public <N extends Number> void addSlider(Option<N> option, N min, N max, N step) {
@@ -162,7 +162,7 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
             this.button.setX(this.getContentWidth() - this.button.getWidth() - 10);
             this.button.render(context, mouseX, mouseY, tickDelta);
 
-            if(this.description == null) return;
+            if(this.name == null) return;
 
             Font textRenderer = Minecraft.getInstance().font;
             context.drawString(textRenderer, Component.literal(indent + this.name), 10, this.getContentY() + (this.getContentHeight() - textRenderer.lineHeight) / 2, 0xFFFFFFFF, true);
@@ -183,7 +183,7 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
             if (this.button.mouseClicked(click, doubleClick)) {
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 if(this.option != null){
-                    this.button.setMessage(Component.translatable(this.option.getValue().toString()));
+                    this.button.setMessage(Component.translatable("dynamichud.config.value." + this.option.getValue().toString().toLowerCase()));
                 }
                 return true;
             }
@@ -211,7 +211,7 @@ public class MyConfigListWidget extends ContainerObjectSelectionList<MyConfigLis
             this.slider.setX(this.getContentWidth() - this.slider.getWidth() - 10);
             this.slider.render(context, mouseX, mouseY, tickDelta);
 
-            if(this.description == null) return;
+            if(this.name == null) return;
 
             Font textRenderer = Minecraft.getInstance().font;
             context.drawString(textRenderer, Component.literal(indent + this.name), 10, this.getContentY() + (this.getContentHeight() - textRenderer.lineHeight) / 2, 0xFFFFFFFF, true);

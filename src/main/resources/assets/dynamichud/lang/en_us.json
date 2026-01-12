@@ -14,5 +14,13 @@
     "dynamichud.config.option.fadein_type.name": "Fade-in type",
     "dynamichud.config.option.fadeout_type.name": "Fade-out type",
     "dynamichud.config.option.fading_duration.name": "Fading duration (in seconds)",
-    "dynamichud.config.option.shown_duration.name": "Display duration (in seconds)"
+    "dynamichud.config.option.shown_duration.name": "Display duration (in seconds)",
+    "dynamichud.config.option.dynamic_food_bar_minimum.name":"Display hunger if under the threshold",
+    "dynamichud.config.option.dynamic_food_bar_holding.name":"Display hunger if holding food",
+    "dynamichud.config.value.true":"Enabled",
+    "dynamichud.config.value.enabled":"Enabled",
+    "dynamichud.config.value.false":"Disabled",
+    "dynamichud.config.value.disabled":"Disabled",
+    "dynamichud.config.value.dynamic":"Dynamic",
+    "dynamichud.config.value.adaptive":"Adaptive"
 }

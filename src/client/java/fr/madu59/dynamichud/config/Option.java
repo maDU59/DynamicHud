@@ -61,6 +61,9 @@ public class Option<T> {
             int nextOrdinal = (enumValue.ordinal() + 1) % constants.length;
             return (T) constants[nextOrdinal];
         }
+        if(value instanceof Boolean boolValue) {
+            return (T) Boolean.valueOf(!boolValue);
+        }
         else return null;
     }
 

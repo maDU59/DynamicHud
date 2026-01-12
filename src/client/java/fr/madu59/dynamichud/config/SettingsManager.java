@@ -115,9 +115,16 @@ public class SettingsManager {
 
     public static Option<Float> DYNAMIC_FOOD_BAR_MINIMUM = loadOptionWithDefaults(
         "dynamic_food_bar_minimum",
-        "dynamichud.config.option.shown_duration.name",
-        "dynamichud.config.option.shown_duration.description",
+        "dynamichud.config.option.dynamic_food_bar_minimum.name",
+        "dynamichud.config.option.dynamic_food_bar_minimum.description",
         2.5f
+    );
+
+    public static Option<Boolean> DYNAMIC_FOOD_BAR_HOLDING = loadOptionWithDefaults(
+        "dynamic_food_bar_holding",
+        "dynamichud.config.option.dynamic_food_bar_holding.name",
+        "dynamichud.config.option.dynamic_food_bar_holding.description",
+        true
     );
 
     public static void saveSettings(List<Option<?>> options) {
