@@ -4,10 +4,10 @@ import net.minecraft.client.resources.language.I18n;
 
 public class Option<T> {
     public String id;
-    public transient String name;
-    public transient String description;
+    public String name;
+    public String description;
     public T value;
-    public transient T defaultValue;
+    public T defaultValue;
 
     public Option(String id, String name, String description, T value, T defaultValue) {
         this.id = id;
