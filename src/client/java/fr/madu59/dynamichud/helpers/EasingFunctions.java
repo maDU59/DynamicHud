@@ -2,22 +2,28 @@ package fr.madu59.dynamichud.helpers;
 
 public class EasingFunctions {
 
-    public static float ease(float value, Type type) {
+    public static float ease(float t, Type type, boolean bool, float value, float dt, float speed) {
         switch (type) {
             case LINEAR:
-                return value;
+                return t;
             case EASE_IN_QUAD:
-                return value * value;
+                return t * t;
             case EASE_OUT_QUAD:
-                return value * (2 - value);
+                return t * (2 - t);
             case EASE_IN_OUT_QUAD:
-                if (value < 0.5) {
-                    return 2 * value * value;
+                if (t < 0.5) {
+                    return 2 * t * t;
                 } else {
-                    return -1 + (4 - 2 * value) * value;
+                    return -1 + (4 - 2 * t) * t;
                 }
+            case CUBIC:
+                return 3 * t * t * t - 2 * t * t;
+            case SQUARE_ROOT:
+                return (float)(bool? Math.sqrt(t):(1-Math.sqrt(1-t)));
+            case EXPONENTIAL:
+            return value + (float)(((bool?1:0) - value) * (1 - Math.exp(-dt * (1.1-speed))));
             default:
-                return value;
+                return t;
         }
     }
 
@@ -25,7 +31,10 @@ public class EasingFunctions {
         LINEAR,
         EASE_IN_QUAD,
         EASE_OUT_QUAD,
-        EASE_IN_OUT_QUAD
+        EASE_IN_OUT_QUAD,
+        CUBIC,
+        SQUARE_ROOT,
+        EXPONENTIAL
     }
 
     public enum FadingType {

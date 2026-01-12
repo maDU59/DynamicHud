@@ -64,7 +64,7 @@ public class DynamicHudConfigScreen extends Screen {
         list.addButton(SettingsManager.FADEOUT_TYPE, btn -> {
             SettingsManager.FADEOUT_TYPE.setToNextValue();
         });
-        list.addSlider(SettingsManager.FADING_DURATION, 0f, 1f, 0.1f);
+        list.addSlider(SettingsManager.FADING_DURATION, 0.1f, 1f, 0.1f);
         list.addSlider(SettingsManager.SHOWN_DURATION, 1f, 5f, 0.1f);
 
         Button doneButton = Button.builder(Component.translatable("dynamichud.config.done"), b -> {

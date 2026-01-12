@@ -118,7 +118,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		healthLinear = lerp(healthLinear, healthState, fadingDuration, 1/(deltaTicks * 0.05f));
-		healthVisibility = EasingFunctions.ease(healthLinear, SettingsManager.EASING_FUNCTION.getValue());
+		healthVisibility = EasingFunctions.ease(healthLinear, SettingsManager.EASING_FUNCTION.getValue(), healthState, healthVisibility, deltaTicks, fadingDuration);
 	}
 
 	private void UpdateVehicleHealth(){
@@ -143,7 +143,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		vehicleHealthLinear = lerp(vehicleHealthLinear, vehicleHealthState, fadingDuration, 1/(deltaTicks * 0.05f));
-		vehicleHealthVisibility = EasingFunctions.ease(vehicleHealthLinear, SettingsManager.EASING_FUNCTION.getValue());
+		vehicleHealthVisibility = EasingFunctions.ease(vehicleHealthLinear, SettingsManager.EASING_FUNCTION.getValue(), vehicleHealthState, vehicleHealthVisibility, deltaTicks, fadingDuration);
 	}
 
 	private void UpdateFood(){
@@ -175,7 +175,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		foodLinear = lerp(foodLinear, foodState, fadingDuration, 1/(deltaTicks * 0.05f));
-		foodVisibility = EasingFunctions.ease(foodLinear, SettingsManager.EASING_FUNCTION.getValue());
+		foodVisibility = EasingFunctions.ease(foodLinear, SettingsManager.EASING_FUNCTION.getValue(), foodState, foodVisibility, deltaTicks, fadingDuration);
 	}
 
 	private void UpdateArmor(){
@@ -203,7 +203,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		armorLinear = lerp(armorLinear, armorState, fadingDuration, 1/(deltaTicks * 0.05f));
-		armorVisibility = EasingFunctions.ease(armorLinear, SettingsManager.EASING_FUNCTION.getValue());
+		armorVisibility = EasingFunctions.ease(armorLinear, SettingsManager.EASING_FUNCTION.getValue(), armorState, armorVisibility, deltaTicks, fadingDuration);
 	}
 
 	private void UpdateContextualBar(){
@@ -264,8 +264,8 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		contextualBarLinear = lerp(contextualBarLinear, contextualBarState, fadingDuration, 1/(deltaTicks * 0.05f));
 		xpLinear = lerp(xpLinear, xpState, fadingDuration, 1/(deltaTicks * 0.05f));
-		contextualBarVisibility = EasingFunctions.ease(contextualBarLinear, SettingsManager.EASING_FUNCTION.getValue());
-		xpVisibility = EasingFunctions.ease(xpLinear, SettingsManager.EASING_FUNCTION.getValue());
+		contextualBarVisibility = EasingFunctions.ease(contextualBarLinear, SettingsManager.EASING_FUNCTION.getValue(), contextualBarState, contextualBarVisibility, deltaTicks, fadingDuration);
+		xpVisibility = EasingFunctions.ease(xpLinear, SettingsManager.EASING_FUNCTION.getValue(), xpState, xpVisibility, deltaTicks, fadingDuration);
 	}
 
 	private void UpdateHotbar(){
@@ -291,7 +291,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		float deltaTicks = this.minecraft.getDeltaTracker().getGameTimeDeltaTicks();
 
 		hotbarLinear = lerp(hotbarLinear, hotbarState, fadingDuration, 1/(deltaTicks * 0.05f));
-		hotbarVisibility = EasingFunctions.ease(hotbarLinear, SettingsManager.EASING_FUNCTION.getValue());
+		hotbarVisibility = EasingFunctions.ease(hotbarLinear, SettingsManager.EASING_FUNCTION.getValue(), hotbarState, hotbarVisibility, deltaTicks, fadingDuration);
 	}
 
 	private float lerp(float value, boolean bool, float duration, float deltaTimeSeconds){

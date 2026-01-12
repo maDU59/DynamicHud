@@ -27,6 +27,9 @@
     "dynamichud.config.value.ease_in_quad":"Ease-in quad",
     "dynamichud.config.value.ease_out_quad":"Ease-out quad",
     "dynamichud.config.value.ease_in_out_quad":"Ease-in-out quad",
+    "dynamichud.config.value.cubic":"Cubic",
+    "dynamichud.config.value.square_root":"Square",
+    "dynamichud.config.value.exponential":"Exponential",
     "dynamichud.config.value.smooth":"Smooth",
     "dynamichud.config.value.instant":"Instant"
 }
