@@ -22,5 +22,11 @@
     "dynamichud.config.value.false":"Disabled",
     "dynamichud.config.value.disabled":"Disabled",
     "dynamichud.config.value.dynamic":"Dynamic",
-    "dynamichud.config.value.adaptive":"Adaptive"
+    "dynamichud.config.value.adaptive":"Adaptive",
+    "dynamichud.config.value.linear":"Linear",
+    "dynamichud.config.value.ease_in_quad":"Ease-in quad",
+    "dynamichud.config.value.ease_out_quad":"Ease-out quad",
+    "dynamichud.config.value.ease_in_out_quad":"Ease-in-out quad",
+    "dynamichud.config.value.smooth":"Smooth",
+    "dynamichud.config.value.instant":"Instant"
 }
