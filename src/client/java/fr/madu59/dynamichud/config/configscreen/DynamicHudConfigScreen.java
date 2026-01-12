@@ -35,6 +35,9 @@ public class DynamicHudConfigScreen extends Screen {
         list.addButton(SettingsManager.CONTEXTUAL_BAR_STATE, btn -> {
             SettingsManager.CONTEXTUAL_BAR_STATE.setToNextValue();
         });
+        list.addButton(SettingsManager.DYNAMIC_XP_BAR_MODE, btn -> {
+            SettingsManager.DYNAMIC_XP_BAR_MODE.setToNextValue();
+        }, INDENT);
         list.addButton(SettingsManager.HEALTH_STATE, btn -> {
             SettingsManager.HEALTH_STATE.setToNextValue();
         });

@@ -79,4 +79,9 @@ public class Option<T> {
         ADAPTIVE,
 		DISABLED;
 	}
+
+    public static enum xpBarState{
+        ON_GAIN,
+        ON_LEVEL
+    }
 }

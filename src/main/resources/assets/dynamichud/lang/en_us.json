@@ -17,6 +17,7 @@
     "dynamichud.config.option.shown_duration.name": "Display duration (in seconds)",
     "dynamichud.config.option.dynamic_food_bar_minimum.name":"Display hunger if under the threshold",
     "dynamichud.config.option.dynamic_food_bar_holding.name":"Display hunger if holding food",
+    "dynamichud.config.option.dynamic_xp_bar_mode.name":"Experience bar preset",
     "dynamichud.config.value.true":"Enabled",
     "dynamichud.config.value.enabled":"Enabled",
     "dynamichud.config.value.false":"Disabled",
@@ -31,5 +32,7 @@
     "dynamichud.config.value.square_root":"Square",
     "dynamichud.config.value.exponential":"Exponential",
     "dynamichud.config.value.smooth":"Smooth",
-    "dynamichud.config.value.instant":"Instant"
+    "dynamichud.config.value.instant":"Instant",
+    "dynamichud.config.value.on_gain":"Display on gain",
+    "dynamichud.config.value.on_level":"Display on level up"
 }

@@ -127,6 +127,13 @@ public class SettingsManager {
         true
     );
 
+    public static Option<Option.xpBarState> DYNAMIC_XP_BAR_MODE = loadOptionWithDefaults(
+        "dynamic_xp_bar_mode",
+        "dynamichud.config.option.dynamic_xp_bar_mode.name",
+        "dynamichud.config.option.dynamic_xp_bar_mode.description",
+        Option.xpBarState.ON_GAIN
+    );
+
     public static void saveSettings(List<Option<?>> options) {
         Map<String, String> map = toMap(options);
         try {

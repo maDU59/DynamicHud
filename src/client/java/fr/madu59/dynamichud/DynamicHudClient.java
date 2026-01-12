@@ -220,7 +220,7 @@ public class DynamicHudClient implements ClientModInitializer {
 		else if(info == DynamicHudClient.ContextualInfo.EXPERIENCE){
 			float experienceProgress = this.minecraft.player.experienceProgress;
 
-			if(this.experienceLevel != experienceLevel || this.experienceProgress != experienceProgress || this.minecraft.screen instanceof EnchantmentScreen){
+			if((this.experienceLevel > experienceLevel && SettingsManager.DYNAMIC_XP_BAR_MODE.value == Option.xpBarState.ON_LEVEL) || (this.experienceProgress != experienceProgress && SettingsManager.DYNAMIC_XP_BAR_MODE.value == Option.xpBarState.ON_GAIN) || this.experienceProgress + this.experienceLevel + 0.05f < experienceProgress + experienceLevel || this.minecraft.screen instanceof EnchantmentScreen){
 				lastContextualBarState = System.nanoTime();
 				lastXpState = System.nanoTime();
 				this.experienceLevel = experienceLevel;
