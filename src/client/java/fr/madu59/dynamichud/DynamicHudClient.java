@@ -158,7 +158,7 @@ public class DynamicHudClient implements ClientModInitializer {
 
 		FoodProperties mainHandFood = this.minecraft.player.getMainHandItem().get(DataComponents.FOOD);
 
-		if (foodLevel < threshold || 
+		if (foodLevel <= threshold || 
 			foodLevel != this.foodLevel || 
 			(mainHandFood != null && mainHandFood.nutrition() > 0 && this.minecraft.player.getFoodData().needsFood())
 		){
