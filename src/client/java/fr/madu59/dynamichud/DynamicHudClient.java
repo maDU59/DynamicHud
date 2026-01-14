@@ -11,11 +11,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult.Type;
 
 public class DynamicHudClient implements ClientModInitializer {
 
@@ -64,6 +72,9 @@ public class DynamicHudClient implements ClientModInitializer {
 	private static float contextualBarLinear = 1.0f;
 	private static long lastContextualBarState = System.nanoTime();
 
+	public static boolean canHit = false;
+	public static DynamicHudClient.Action action = DynamicHudClient.Action.NULL;
+
 	public static float xpVisibility = 1.0f;
 	public static boolean xpState = true;
 	private static float xpLinear = 1.0f;
@@ -79,6 +90,7 @@ public class DynamicHudClient implements ClientModInitializer {
 	public void onInitializeClient() {
 
 		HudRenderCallback.EVENT.register((drawContext, delta) -> {
+				action = UpdateCrosshair();
 				UpdateHotbar();
 				UpdateHealth();
 				UpdateArmor();
@@ -156,11 +168,9 @@ public class DynamicHudClient implements ClientModInitializer {
 		float threshold = SettingsManager.DYNAMIC_FOOD_BAR_MINIMUM.getValue() * 2;
 		int foodLevel = this.minecraft.player.getFoodData().getFoodLevel();
 
-		FoodProperties mainHandFood = this.minecraft.player.getMainHandItem().get(DataComponents.FOOD);
-
 		if (foodLevel <= threshold || 
 			foodLevel != this.foodLevel || 
-			(mainHandFood != null && mainHandFood.nutrition() > 0 && this.minecraft.player.getFoodData().needsFood() && SettingsManager.DYNAMIC_FOOD_BAR_HOLDING.getValue() == true)
+			(action == DynamicHudClient.Action.FOOD && SettingsManager.DYNAMIC_FOOD_BAR_HOLDING.getValue() == true)
 		){
 			lastFoodState = System.nanoTime();
 			this.foodLevel = foodLevel;
@@ -294,6 +304,38 @@ public class DynamicHudClient implements ClientModInitializer {
 		hotbarVisibility = EasingFunctions.ease(hotbarLinear, SettingsManager.EASING_FUNCTION.getValue(), hotbarState, hotbarVisibility, deltaTicks, fadingDuration);
 	}
 
+	private DynamicHudClient.Action UpdateCrosshair(){
+
+		if (this.minecraft.player == null) return DynamicHudClient.Action.NULL;
+
+		for (InteractionHand interactionHand : InteractionHand.values()){
+			ItemStack itemStack = this.minecraft.player.getItemInHand(interactionHand);
+			if (!itemStack.isItemEnabled(this.minecraft.level.enabledFeatures())) {
+				return DynamicHudClient.Action.NULL;
+			}
+
+			if (this.minecraft.hitResult != null){
+				if (this.minecraft.hitResult.getType() == Type.ENTITY){
+					canHit = true;
+				}
+				if (this.minecraft.hitResult instanceof BlockHitResult blockHitResult){
+					if(!itemStack.isEmpty()){
+						if(itemStack.getItem() instanceof BlockItem){
+							BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(this.minecraft.player, InteractionHand.MAIN_HAND, blockHitResult));
+							if(context.canPlace()) return DynamicHudClient.Action.PLACE;
+						}
+					}
+				}
+			}
+			if(!itemStack.isEmpty()){
+				if(itemStack.get(DataComponents.FOOD) != null && itemStack.get(DataComponents.FOOD).nutrition() > 0 && this.minecraft.player.getFoodData().needsFood()){
+					return DynamicHudClient.Action.FOOD;
+				}
+			}
+		}
+		return DynamicHudClient.Action.NULL;
+	}
+
 	private float lerp(float value, boolean bool, float duration, float deltaTimeSeconds){
 		if (bool){
 			if (value < 1.0f){
@@ -328,6 +370,12 @@ public class DynamicHudClient implements ClientModInitializer {
 		} else {
 			return bl3 ? DynamicHudClient.ContextualInfo.EXPERIENCE : DynamicHudClient.ContextualInfo.EMPTY;
 		}
+	}
+
+	static enum Action{
+		NULL,
+		FOOD,
+		PLACE
 	}
 
 	static enum ContextualInfo {
