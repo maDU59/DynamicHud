@@ -38,6 +38,7 @@
 		"java": ">=21",
 		"fabric-api": "*"
 	},
+	"accessWidener":"dynamichud.classtweaker",
 	"suggests": {
 		"another-mod": "*"
 	}

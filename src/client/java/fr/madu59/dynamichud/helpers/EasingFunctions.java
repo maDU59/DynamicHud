@@ -1,6 +1,5 @@
 package fr.madu59.dynamichud.helpers;
 
-import fr.madu59.dynamichud.config.Option;
 import fr.madu59.dynamichud.config.SettingsManager;
 
 public class EasingFunctions {

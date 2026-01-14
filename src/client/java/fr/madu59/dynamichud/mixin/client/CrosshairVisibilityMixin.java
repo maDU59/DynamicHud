@@ -1,5 +1,6 @@
 package fr.madu59.dynamichud.mixin.client;
 
+import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -28,6 +29,8 @@ import fr.madu59.dynamichud.config.SettingsManager;
 @Mixin(Gui.class)
 public class CrosshairVisibilityMixin {
 
+	public final Minecraft minecraft = Minecraft.getInstance();
+
 	//#region Crosshair mixins
 
 	@Inject(at = @At("HEAD"), method = "renderCrosshair", cancellable = true)
@@ -35,16 +38,20 @@ public class CrosshairVisibilityMixin {
 
 		Option.CrosshairState crosshairStateSetting = SettingsManager.CROSSHAIR_STATE.getValue();
 
-		if(Minecraft.getInstance().player == null) return;
+		if(this.minecraft.player == null) return;
 		if(crosshairStateSetting == Option.CrosshairState.DISABLED) {
 			info.cancel();
 			return;
 		}
 
-		Item heldItem = Minecraft.getInstance().player.getMainHandItem().getItem();
-		HitResult hit = Minecraft.getInstance().hitResult;
+		Item heldItem = this.minecraft.player.getMainHandItem().getItem();
+		HitResult hit = this.minecraft.hitResult;
 
-		if ((hit != null && hit.getType() != Type.MISS) || heldItem instanceof ProjectileItem || heldItem instanceof ProjectileWeaponItem || crosshairStateSetting == Option.CrosshairState.ENABLED){
+		if ((hit != null && hit.getType() != Type.MISS) || 
+		heldItem instanceof ProjectileItem || 
+		heldItem instanceof ProjectileWeaponItem || 
+		this.minecraft.player.getAttackStrengthScale(0) < 1.0F ||
+		crosshairStateSetting == Option.CrosshairState.ENABLED){
 			return;
 		}
 		else{

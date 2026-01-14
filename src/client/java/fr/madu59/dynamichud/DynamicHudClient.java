@@ -19,9 +19,13 @@ import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 
@@ -318,12 +322,13 @@ public class DynamicHudClient implements ClientModInitializer {
 				if (this.minecraft.hitResult.getType() == Type.ENTITY){
 					canHit = true;
 				}
-				if (this.minecraft.hitResult instanceof BlockHitResult blockHitResult){
+				if (this.minecraft.hitResult.getType() == Type.BLOCK && this.minecraft.hitResult instanceof BlockHitResult blockHitResult ){
 					if(!itemStack.isEmpty()){
 						if(itemStack.getItem() instanceof BlockItem){
-							BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(this.minecraft.player, InteractionHand.MAIN_HAND, blockHitResult));
+							BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(this.minecraft.player, interactionHand, blockHitResult));
 							if(context.canPlace()) return DynamicHudClient.Action.PLACE;
 						}
+						if(getToolInteraction(itemStack.getItem(), this.minecraft.level.getBlockState(blockHitResult.getBlockPos()))) return DynamicHudClient.Action.TOOL_INTERACTION;
 					}
 				}
 			}
@@ -334,6 +339,22 @@ public class DynamicHudClient implements ClientModInitializer {
 			}
 		}
 		return DynamicHudClient.Action.NULL;
+	}
+
+	private boolean getToolInteraction(Item item, BlockState blockState){
+		if (item instanceof AxeItem) {
+			return AxeItem.STRIPPABLES.containsKey(blockState.getBlock());
+		}
+		
+		if (item instanceof ShovelItem) {
+			return ShovelItem.FLATTENABLES.containsKey(blockState.getBlock());
+		}
+		
+		if (item instanceof HoeItem) {
+			return HoeItem.TILLABLES.containsKey(blockState.getBlock());
+		}
+
+		return false;
 	}
 
 	private float lerp(float value, boolean bool, float duration, float deltaTimeSeconds){
@@ -375,7 +396,8 @@ public class DynamicHudClient implements ClientModInitializer {
 	static enum Action{
 		NULL,
 		FOOD,
-		PLACE
+		PLACE,
+		TOOL_INTERACTION
 	}
 
 	static enum ContextualInfo {
