@@ -1,6 +1,5 @@
 package fr.madu59.dynamichud.mixin.client;
 
-import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -27,9 +26,13 @@ import fr.madu59.dynamichud.config.Option;
 import fr.madu59.dynamichud.config.SettingsManager;
 
 @Mixin(Gui.class)
-public class CrosshairVisibilityMixin {
+public abstract class GuiMixin {
 
 	public final Minecraft minecraft = Minecraft.getInstance();
+	private static final Identifier CROSSHAIR_PROJECTILE_HIT_SPRITE = Identifier.fromNamespaceAndPath("dynamichud","crosshair/hit");
+	private static final Identifier CROSSHAIR_RANGED_SPRITE = Identifier.fromNamespaceAndPath("dynamichud","crosshair/ranged");
+	private static final Identifier CROSSHAIR_ACTION_SPRITE = Identifier.fromNamespaceAndPath("dynamichud","crosshair/action");
+	private static final Identifier CROSSHAIR_SPRITE = Identifier.withDefaultNamespace("hud/crosshair");
 
 	//#region Crosshair mixins
 
@@ -57,6 +60,27 @@ public class CrosshairVisibilityMixin {
 		else{
 			info.cancel();
 		}
+	}
+
+	@Redirect(
+    	method = "renderCrosshair",
+    	at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V")
+	)
+	private void redirectCrosshairBlit(GuiGraphics instance, RenderPipeline pipeline, Identifier id, int x, int y, int width, int height) {
+		if(id.equals(CROSSHAIR_SPRITE) && SettingsManager.CROSSHAIR_STATE.getValue() == Option.CrosshairState.ADAPTIVE){
+			Item heldItem = this.minecraft.player.getMainHandItem().getItem();
+
+			if(heldItem instanceof ProjectileItem || heldItem instanceof ProjectileWeaponItem) instance.blitSprite(pipeline, CROSSHAIR_RANGED_SPRITE, x, y, width, height);
+			else instance.blitSprite(pipeline, id, x, y, width, height);
+
+			if(DynamicHudClient.action == DynamicHudClient.Action.TOOL_INTERACTION){
+				instance.blitSprite(pipeline, CROSSHAIR_ACTION_SPRITE, x, y, width, height);
+			}
+			if(DynamicHudClient.projectileHitTimer > 0.0F){
+				instance.blitSprite(pipeline, CROSSHAIR_PROJECTILE_HIT_SPRITE, x, y, width, height);
+			}
+		}
+		else instance.blitSprite(pipeline, id, x, y, width, height);
 	}
 
 	//#endregion

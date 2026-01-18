@@ -16,7 +16,7 @@ import net.minecraft.util.ARGB;
 @Mixin(targets = {"net.minecraft.client.gui.contextualbar.ExperienceBarRenderer",
                   "net.minecraft.client.gui.contextualbar.LocatorBarRenderer",
                   "net.minecraft.client.gui.contextualbar.JumpableVehicleBarRenderer"})
-public class ContextualBarRenderersMixin {
+public abstract class ContextualBarRenderersMixin {
 
     @Redirect(
 		method = {"renderBackground", "render"},

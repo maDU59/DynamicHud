@@ -3,9 +3,10 @@
 	"package": "fr.madu59.dynamichud.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"CrosshairVisibilityMixin",
+		"GuiMixin",
 		"ContextualBarRendererMixin",
-		"ContextualBarRenderersMixin"
+		"ContextualBarRenderersMixin",
+		"ProjectileMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

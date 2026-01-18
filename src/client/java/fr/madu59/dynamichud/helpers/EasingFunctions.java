@@ -25,7 +25,7 @@ public class EasingFunctions {
             case EXPONENTIAL:
                 if(bool && SettingsManager.FADEIN_TYPE.getValue() == EasingFunctions.FadingType.INSTANT) return 1;
                 if(!bool && SettingsManager.FADEOUT_TYPE.getValue() == EasingFunctions.FadingType.INSTANT) return 0;
-                return value + (float)(((bool?1:0) - value) * (1 - Math.exp(-dt * (1.1-speed))));
+                return value + (float)(((bool?1:0) - value) * (1 - Math.exp(-(dt / 0.05f) * (1.1-speed))));
             default:
                 return t;
         }

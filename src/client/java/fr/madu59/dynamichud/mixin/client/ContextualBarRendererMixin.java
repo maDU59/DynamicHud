@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 @Mixin(ContextualBarRenderer.class)
-public interface ContextualBarRendererMixin {
+public abstract interface ContextualBarRendererMixin {
 
     @Inject(method = "top", at = @At("RETURN"), cancellable = true)
     default void modifyTopPosition(CallbackInfoReturnable<Integer> info) {
