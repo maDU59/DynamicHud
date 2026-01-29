@@ -40,47 +40,21 @@ public class DynamicHudConfigScreen extends Screen {
 
         // Example: Add categories + buttons
         list.addCategory("dynamichud.config.category.main");
-        list.addButton(SettingsManager.CROSSHAIR_STATE, btn -> {
-            SettingsManager.CROSSHAIR_STATE.setToNextValue();
-        });
-        list.addButton(SettingsManager.HOTBAR_STATE, btn -> {
-            SettingsManager.HOTBAR_STATE.setToNextValue();
-        });
-        list.addButton(SettingsManager.CONTEXTUAL_BAR_STATE, btn -> {
-            SettingsManager.CONTEXTUAL_BAR_STATE.setToNextValue();
-        });
-        list.addButton(SettingsManager.DYNAMIC_XP_BAR_MODE, btn -> {
-            SettingsManager.DYNAMIC_XP_BAR_MODE.setToNextValue();
-        }, INDENT);
-        list.addButton(SettingsManager.HEALTH_STATE, btn -> {
-            SettingsManager.HEALTH_STATE.setToNextValue();
-        });
-        list.addButton(SettingsManager.ARMOR_STATE, btn -> {
-            SettingsManager.ARMOR_STATE.setToNextValue();
-        });
-        list.addButton(SettingsManager.FOOD_STATE, btn -> {
-            SettingsManager.FOOD_STATE.setToNextValue();
-        });
+        list.addButton(SettingsManager.CROSSHAIR_STATE);
+        list.addButton(SettingsManager.HOTBAR_STATE);
+        list.addButton(SettingsManager.CONTEXTUAL_BAR_STATE);
+        list.addButton(SettingsManager.DYNAMIC_XP_BAR_MODE);
+        list.addButton(SettingsManager.HEALTH_STATE);
+        list.addButton(SettingsManager.ARMOR_STATE);
+        list.addButton(SettingsManager.FOOD_STATE);
         list.addSlider(SettingsManager.DYNAMIC_FOOD_BAR_MINIMUM, 0f, 10f, 0.5f, INDENT);
-        list.addButton(SettingsManager.DYNAMIC_FOOD_BAR_HOLDING, btn -> {
-            SettingsManager.DYNAMIC_FOOD_BAR_HOLDING.setToNextValue();
-        }, INDENT);
-        list.addButton(SettingsManager.AIR_STATE, btn -> {
-            SettingsManager.AIR_STATE.setToNextValue();
-        });
-        list.addButton(SettingsManager.MOUNT_HEALTH_STATE, btn -> {
-            SettingsManager.MOUNT_HEALTH_STATE.setToNextValue();
-        });
+        list.addButton(SettingsManager.DYNAMIC_FOOD_BAR_HOLDING, INDENT);
+        list.addButton(SettingsManager.AIR_STATE);
+        list.addButton(SettingsManager.MOUNT_HEALTH_STATE);
         list.addCategory("dynamichud.config.category.global_settings");
-        list.addButton(SettingsManager.EASING_FUNCTION, btn -> {
-            SettingsManager.EASING_FUNCTION.setToNextValue();
-        });
-        list.addButton(SettingsManager.FADEIN_TYPE, btn -> {
-            SettingsManager.FADEIN_TYPE.setToNextValue();
-        });
-        list.addButton(SettingsManager.FADEOUT_TYPE, btn -> {
-            SettingsManager.FADEOUT_TYPE.setToNextValue();
-        });
+        list.addButton(SettingsManager.EASING_FUNCTION);
+        list.addButton(SettingsManager.FADEIN_TYPE);
+        list.addButton(SettingsManager.FADEOUT_TYPE);
         list.addSlider(SettingsManager.FADING_DURATION, 0.1f, 1f, 0.1f);
         list.addSlider(SettingsManager.SHOWN_DURATION, 1f, 5f, 0.1f);
 
